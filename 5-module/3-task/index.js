@@ -20,11 +20,12 @@ function initCarousel() {
     console.log(`счетчик : ${counter}`);
     arrowRigth.style.display = "flex";
     slides.style.transform = `translateX(-${moving(counter)}px)`;
+    if (counter === 0) {
+      arrowLeft.style.display = "none";
+    }
   });
 
-  if (counter === 0) {
-    arrowLeft.style.display = "none";
-  }
+  arrowLeft.style.display = "none";
 
   function moving(counter) {
     let x = slideWidth * counter;
