@@ -1,4 +1,4 @@
-import { createElement } from "../../assets/lib/create-element.js";
+import { createElement } from "../../assets/lib/create-element";
 export default class ProductCard {
   constructor(product) {
     this.elem = createElement(`<div class="card">
