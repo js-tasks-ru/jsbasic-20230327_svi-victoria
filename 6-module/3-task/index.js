@@ -1,8 +1,9 @@
-//import { createElement } from "../../assets/lib/create-element";
+import { createElement } from "../../assets/lib/create-element.js";
 
 export default class Carousel {
   constructor(slides) {
     this.slides = slides;
+
     this.elem = createElement(`<div class="carousel">
     <div class="carousel__arrow carousel__arrow_right"> 
       <img src="../../assets/images/icons/angle-icon.svg" alt="icon">
@@ -16,7 +17,6 @@ export default class Carousel {
     for (let key of this.slides) {
       this[key] = createSlides(key);
       this.inner.append(this[key]);
-      this.productId = this[key].dataset.id;
     }
 
     this.btn = this.elem.querySelectorAll(".carousel__button");
@@ -25,22 +25,54 @@ export default class Carousel {
     }
 
     this.elem.addEventListener("product-add", (event) =>
-      console.log(this.productId)
+      console.log(event.detail)
     );
+    this.initCarousel();
   }
   onClick = (event) => {
     let myEvent = new CustomEvent("product-add", {
-      detail: this.productId,
+      detail: event.target.closest(".carousel__slide").dataset.id,
       bubbles: true,
     });
     this.elem.dispatchEvent(myEvent);
   };
-}
+  initCarousel() {
+    let arrowLeft = this.elem.querySelector(".carousel__arrow_left");
+    let arrowRigth = this.elem.querySelector(".carousel__arrow_right");
+    let slides = this.elem.querySelector(".carousel__inner");
+    let oneslide = this.elem.querySelector(".carousel__slide");
+    let slideWidth = oneslide.offsetWidth;
+    let counter = 0;
+    let finalslide = this.slides.length - 1;
 
-function createElement(html) {
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  return div.firstElementChild;
+    arrowRigth.addEventListener("click", function (event) {
+      let slideWidth = oneslide.offsetWidth;
+      counter++;
+      arrowRigth.style.display = counter == finalslide ? "none" : "flex";
+      arrowLeft.style.display = "flex";
+
+      console.log(`счетчик : ${counter}`);
+      slides.style.transform = `translateX(-${moving(counter, slideWidth)}px)`;
+    });
+
+    arrowLeft.addEventListener("click", function (event) {
+      let slideWidth = oneslide.offsetWidth;
+      counter--;
+      console.log(`счетчик : ${counter}`);
+      arrowRigth.style.display = "flex";
+      slides.style.transform = `translateX(-${moving(counter, slideWidth)}px)`;
+      if (counter === 0) {
+        arrowLeft.style.display = "none";
+      }
+    });
+
+    arrowLeft.style.display = "none";
+
+    function moving(counter, slideWidth) {
+      let x = slideWidth * counter;
+      return x;
+    }
+  }
 }
 
 function createSlides(key) {
@@ -55,40 +87,4 @@ function createSlides(key) {
   </div>
 </div>`);
   return slide;
-}
-
-//не могу экспортировать функцию, браузер не находит файл пишет 404 ошибку
-export function initCarousel(carousel) {
-  let arrowLeft = carousel.querySelector(".carousel__arrow_left");
-  let arrowRigth = carousel.querySelector(".carousel__arrow_right");
-  let slides = carousel.querySelector(".carousel__inner");
-  let oneslide = carousel.querySelector(".carousel__slide");
-  let slideWidth = oneslide.offsetWidth;
-  let counter = 0;
-
-  arrowRigth.addEventListener("click", function (event) {
-    counter++;
-    arrowRigth.style.display = counter == 3 ? "none" : "flex"; //написать черех slides.length
-    arrowLeft.style.display = "flex";
-
-    console.log(`счетчик : ${counter}`);
-    slides.style.transform = `translateX(-${moving(counter)}px)`;
-  });
-
-  arrowLeft.addEventListener("click", function (event) {
-    counter--;
-    console.log(`счетчик : ${counter}`);
-    arrowRigth.style.display = "flex";
-    slides.style.transform = `translateX(-${moving(counter)}px)`;
-    if (counter === 0) {
-      arrowLeft.style.display = "none";
-    }
-  });
-
-  arrowLeft.style.display = "none";
-
-  function moving(counter) {
-    let x = slideWidth * counter;
-    return x;
-  }
 }
