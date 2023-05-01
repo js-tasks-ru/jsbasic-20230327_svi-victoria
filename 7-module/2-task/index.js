@@ -2,13 +2,9 @@ import { createElement } from "../../assets/lib/create-element.js";
 
 export default class Modal {
   constructor() {
-    window.addEventListener("keydown", function (event) {
-      if (event.code === "Escape") {
-        this.close();
-      }
-    });
+    this.render();
   }
-  open() {
+  render() {
     this.elem = createElement(`<div class="modal">
     
     <div class="modal__overlay"></div>
@@ -18,37 +14,36 @@ export default class Modal {
         <button type="button" class="modal__close">
           <img src="/assets/images/icons/cross-icon.svg" alt="close-icon" />
         </button>
-        <h3 class="modal__title">
-          ${this.titletext}
-        </h3>
+        <h3 class="modal__title"></h3>
       </div>
-      <div class="modal__body">
-        ${this.bodytext}
-      </div>
+      <div class="modal__body"></div>
     </div>
 
   </div>`);
+  }
+  open() {
     let body = document.querySelector("body");
     body.append(this.elem);
     body.classList.add("is-modal-open");
     this.buttonClose = this.elem.querySelector(".modal__close");
     this.buttonClose.addEventListener("click", this.close);
+    document.addEventListener("keydown", this.onKeyDown);
   }
   setTitle(titletext) {
-    this.titletext = titletext;
+    this.elem.querySelector(".modal__title").textContent = titletext;
   }
   setBody(bodyinner) {
-    this.bodytext = bodyinner.textContent;
+    this.elem.querySelector(".modal__body").innerHTML = "";
+    this.elem.querySelector(".modal__body").append(bodyinner);
   }
-  close() {
-    let body = document.querySelector("body");
-    body.classList.remove("is-modal-open");
-    let elem = document.querySelector(".modal");
-    elem.remove(); //не проходит тест, почему?
-    window.removeEventListener("keydown", function (event) {
-      if (event.code === "Escape") {
-        this.close();
-      }
-    });
-  }
+  onKeyDown = (event) => {
+    if (event.code === "Escape") {
+      this.close();
+    }
+  };
+  close = (event) => {
+    document.body.classList.remove("is-modal-open");
+    document.removeEventListener("keydown", this.close);
+    this.elem.remove();
+  };
 }
