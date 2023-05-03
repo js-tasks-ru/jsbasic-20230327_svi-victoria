@@ -1,10 +1,10 @@
-import { createElement } from "../../assets/lib/create-element.js";
+import createElement from "../../assets/lib/create-element.js";
 
 export default class RibbonMenu {
   constructor(categories) {
     this.categories = categories;
     this.elem = createElement(`<div class="ribbon">
-    <button class="ribbon__arrow ribbon__arrow_left ribbon__arrow_visible">
+    <button class="ribbon__arrow ribbon__arrow_left ">
       <img src="/assets/images/icons/angle-icon.svg" alt="icon">
     </button>
     <button class="ribbon__arrow ribbon__arrow_right ribbon__arrow_visible">
@@ -20,11 +20,13 @@ export default class RibbonMenu {
       this.inner.append(this[item]);
     }
     this.menuItem = this.elem.querySelectorAll(".ribbon__item");
-    // let menuesActive = this.elem.querySelector(".ribbon__item_active");
-    // menuesActive.classList.remove("ribbon__item_active");
+
     for (let menues of this.menuItem) {
-      menues.addEventListener("click", function (event) {
+      menues.addEventListener("click", (event) => {
         event.preventDefault();
+        for (let menuItem of this.menuItem) {
+          menuItem.classList.remove("ribbon__item_active");
+        }
         menues.classList.add("ribbon__item_active");
       });
       menues.addEventListener("click", this.onClick);
@@ -43,6 +45,36 @@ export default class RibbonMenu {
     });
     this.elem.dispatchEvent(ribbonSelect);
   };
+
+  updateArrows = () => {
+    let inner = this.elem.querySelector(".ribbon__inner");
+    let scrollLeft = inner.scrollLeft;
+    let scrollRight =
+      inner.scrollWidth - (inner.scrollLeft + inner.clientWidth);
+
+    if (scrollLeft > 0) {
+      this.elem
+        .querySelector(".ribbon__arrow_left")
+        .classList.add("ribbon__arrow_visible");
+    } else {
+      this.elem
+        .querySelector(".ribbon__arrow_left")
+        .classList.remove("ribbon__arrow_visible");
+    }
+
+    scrollRight = scrollRight < 1 ? 0 : scrollRight;
+
+    if (scrollRight > 0) {
+      this.elem
+        .querySelector(".ribbon__arrow_right")
+        .classList.add("ribbon__arrow_visible");
+    } else {
+      this.elem
+        .querySelector(".ribbon__arrow_right")
+        .classList.remove("ribbon__arrow_visible");
+    }
+  };
+
   initScrolling() {
     let innerforScrolling = this.inner;
     let scrollLeft = innerforScrolling.scrollLeft;
@@ -50,14 +82,14 @@ export default class RibbonMenu {
     let clientWidth = innerforScrolling.clientWidth;
     let scrollRight = scrollWidth - scrollLeft - clientWidth;
 
-    this.buttonRigth.addEventListener("click", function (event) {
+    this.buttonRigth.addEventListener("click", (event) => {
       innerforScrolling.scrollBy(350, 0);
-      console.log(`scrollRight: ${scrollRight}`);
+      this.updateArrows();
     });
 
-    this.buttonLeft.addEventListener("click", function (event) {
+    this.buttonLeft.addEventListener("click", (event) => {
       innerforScrolling.scrollBy(-350, 0);
-      console.log(`scrollLeft: ${scrollLeft}`);
+      this.updateArrows();
     });
   }
 }

@@ -70,6 +70,8 @@ export default class StepSlider {
     for (let span of spans) {
       if (span.classList.contains(`step${spanActive}`)) {
         span.classList.add("slider__step-active");
+      } else {
+        span.classList.remove("slider__step-active");
       }
     }
     console.log(this.value);
@@ -91,6 +93,8 @@ export default class StepSlider {
     for (let span of spans) {
       if (span.classList.contains(`step${spanActive}`)) {
         span.classList.add("slider__step-active");
+      } else {
+        span.classList.remove("slider__step-active");
       }
     }
     this.sliderThumb.style.left = `${valuePercents}%`;
