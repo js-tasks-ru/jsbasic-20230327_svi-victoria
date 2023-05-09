@@ -35,6 +35,8 @@ export default class StepSlider {
 
     this.elem.addEventListener("pointerup", this.sliderChange);
     this.sliderThumb.addEventListener("pointerdown", this.startMoving);
+    this.sliderThumb.addEventListener("pointermove", this.moving);
+    this.sliderThumb.addEventListener("pointerup", this.finishMoving);
 
     this.elem.addEventListener("click", this.onClick);
     this.elem.addEventListener("click", this.sliderChange);
@@ -52,8 +54,6 @@ export default class StepSlider {
   startMoving = (event) => {
     this.elem.classList.add("slider_dragging");
     this.sliderThumb.style.position = "absolute";
-    this.sliderThumb.addEventListener("pointermove", this.moving);
-    this.sliderThumb.addEventListener("pointerup", this.finishMoving);
   };
   moving = (event) => {
     let left = event.clientX - this.elem.getBoundingClientRect().left;
@@ -74,11 +74,10 @@ export default class StepSlider {
         span.classList.remove("slider__step-active");
       }
     }
+    console.log(this.value);
   };
   finishMoving = (event) => {
-    this.sliderThumb.removeEventListener("pointerup", this.startMoving);
-    this.sliderThumb.removeEventListener("pointermove", this.moving);
-    this.elem.classList.remove("slider_dragging");
+    this.sliderThumb.removeEventListener("mousemove", this.moving);
     this.sliderThumb.finishMoving = null;
   };
 
