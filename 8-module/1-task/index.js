@@ -5,8 +5,6 @@ export default class CartIcon {
     this.render();
 
     this.addEventListeners();
-    this.initialTopCoord =
-      this.elem.getBoundingClientRect().top + window.pageYOffset; //переместить в конструктор?
   }
 
   render() {
@@ -46,6 +44,15 @@ export default class CartIcon {
   }
 
   updatePosition() {
+    if (!this.elem.offsetHeight) {
+      return;
+    }
+
+    if (!this.initialTopCoord) {
+      this.initialTopCoord =
+        this.elem.getBoundingClientRect().top + window.pageYOffset;
+    }
+
     let firstIndent =
       document.querySelector(".container").getBoundingClientRect().right + 20;
     let secondIndent =
@@ -61,6 +68,7 @@ export default class CartIcon {
         left: leftIndent,
       });
     }
+
     if (document.documentElement.clientWidth <= 767) {
       Object.assign(this.elem.style, {
         position: "",
