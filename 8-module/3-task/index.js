@@ -6,18 +6,19 @@ export default class Cart {
   }
 
   addProduct(productToAdd) {
-    if (productToAdd === null) {
+    let cartItem;
+    if (!productToAdd) {
       return;
     } else {
-      let addObject = { product: productToAdd, count: 1 };
+      cartItem = { product: productToAdd, count: 1 };
       if (this.cartItems.length == 0) {
-        this.cartItems.push(addObject);
+        this.cartItems.push(cartItem);
       } else {
         let filtratedItem = this.cartItems.filter(
           (item) => item.product == productToAdd
         );
         if (filtratedItem.length == 0) {
-          this.cartItems.push(addObject);
+          this.cartItems.push(cartItem);
         } else {
           let indexOfProduct = this.cartItems.findIndex(
             (item) => item.product == filtratedItem[0].product
@@ -26,7 +27,6 @@ export default class Cart {
         }
       }
     }
-
     this.onProductUpdate(cartItem);
   }
 
@@ -41,7 +41,11 @@ export default class Cart {
     if (this.cartItems[indexOfProduct].count == 0) {
       delete this.cartItems[indexOfProduct];
     }
-    this.onProductUpdate(cartItem);
+    let emptyCart = this.getTotalCount();
+    if (emptyCart === 0) {
+      this.cartItems.length = 0;
+    }
+    this.onProductUpdate(this.cartItems[indexOfProduct]);
   }
 
   isEmpty() {
