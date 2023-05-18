@@ -34,7 +34,6 @@ export default class Cart {
         }
       }
     }
-    //console.log(this.cartItems);
     this.onProductUpdate(cartItem);
   }
 
@@ -148,6 +147,8 @@ export default class Cart {
         this.updateProductCount(productId, amount);
       });
     }
+    let cartForm = document.querySelector(".cart-form");
+    cartForm.addEventListener("submit", (event) => this.onSubmit(event));
   }
 
   onProductUpdate(cartItem) {
@@ -155,14 +156,14 @@ export default class Cart {
     let body = document.querySelector("body");
     if (body.classList.contains("is-modal-open")) {
       let modalBody = document.querySelector(".modal__body");
-      if (!cartItem) {
+      /* if (!cartItem) {
         this.renderModal(); //работет неправильно
         return;
-      }
-      if (this.cartItems.length == 0) {
+      }*/
+      /*if (this.cartItems.length == 0) {
         let modal = document.querySelector(".modal");
         modal.remove();
-      } //не работает
+      }*/ //не работает
       let productId = cartItem.product.id;
       let productCount = modalBody.querySelector(
         `[data-product-id="${productId}"] .cart-counter__count`
@@ -179,10 +180,37 @@ export default class Cart {
       infoPrice.innerHTML = `€${this.getTotalPrice().toFixed(2)}`;
     }
   }
-
-  onSubmit(event) {}
-
   addEventListeners() {
     this.cartIcon.elem.onclick = () => this.renderModal();
+  }
+
+  onSubmit(event) {
+    console.log("сабмит");
+    event.preventDefault();
+    let cartForm = document.querySelector(".cart-form");
+    let btnSubmit = document.querySelector(".cart-buttons__button");
+    btnSubmit.classList.add("is-loading");
+
+    let formDataOrder = new FormData(cartForm);
+    fetch("https://httpbin.org/post", {
+      method: "POST",
+      body: formDataOrder,
+    }).then((response) => {
+      if (response.ok) {
+        let modalHeader = document.querySelector(".modal__title");
+        let modalBody = document.querySelector(".modal__body");
+        modalHeader.textContent = "Success!";
+        this.cartItems.length = 0;
+        modalBody.innerHTML = `<div class="modal__body-inner">
+        <p>
+          Order successful! Your order is being cooked :) <br>
+          We\’ll notify you about delivery time shortly.<br>
+          <img src="/assets/images/delivery.gif">
+        </p>
+      </div>`;
+
+        console.log("ok");
+      }
+    });
   }
 }
