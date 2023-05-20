@@ -163,8 +163,6 @@ export default class Cart {
         this.modal.close();
         return;
       } else {
-        console.log(this.cartItems);
-        console.log("ререндер");
         this.modal.close();
         this.renderModal();
         return;
