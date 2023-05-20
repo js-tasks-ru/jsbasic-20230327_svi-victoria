@@ -4,7 +4,6 @@ export default function promiseClick(button) {
     button.addEventListener(
       "click",
       (event) => {
-        console.log(`эвент ${event}`);
         resolve(event);
       },
       { once: true }
