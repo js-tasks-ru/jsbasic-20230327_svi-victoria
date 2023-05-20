@@ -46,7 +46,7 @@ export default class Cart {
     );
     this.cartItems[indexOfProduct].count += amount;
     if (this.cartItems[indexOfProduct].count == 0) {
-      delete this.cartItems[indexOfProduct];
+      this.cartItems.splice(indexOfProduct, 1);
     }
     let emptyCart = this.getTotalCount();
     if (emptyCart === 0) {
@@ -127,16 +127,16 @@ export default class Cart {
   }
 
   renderModal() {
-    let modal = new Modal();
-    modal.setTitle("Your order");
-    modal.open();
+    this.modal = new Modal();
+    this.modal.setTitle("Your order");
+    this.modal.open();
 
     let renderList = this.cartItems.reduce((total, item) => {
       total.append(this.renderProduct(item.product, item.count));
       return total;
     }, createElement("<div></div>"));
     renderList.append(this.renderOrderForm());
-    modal.setBody(renderList);
+    this.modal.setBody(renderList);
     let btnCounter = document.querySelectorAll(".cart-counter__button");
     for (let el of btnCounter) {
       el.addEventListener("click", (event) => {
@@ -153,32 +153,38 @@ export default class Cart {
 
   onProductUpdate(cartItem) {
     this.cartIcon.update(this);
-    let body = document.querySelector("body");
-    if (body.classList.contains("is-modal-open")) {
-      let modalBody = document.querySelector(".modal__body");
-      /* if (!cartItem) {
-        this.renderModal(); //работет неправильно
-        return;
-      }*/
-      /*if (this.cartItems.length == 0) {
-        let modal = document.querySelector(".modal");
-        modal.remove();
-      }*/ //не работает
-      let productId = cartItem.product.id;
-      let productCount = modalBody.querySelector(
-        `[data-product-id="${productId}"] .cart-counter__count`
-      );
-      let productPrice = modalBody.querySelector(
-        `[data-product-id="${productId}"] .cart-product__price`
-      );
-      let infoPrice = modalBody.querySelector(`.cart-buttons__info-price`);
-
-      productCount.innerHTML = cartItem.count;
-      productPrice.innerHTML = `€${(
-        cartItem.product.price * cartItem.count
-      ).toFixed(2)}`;
-      infoPrice.innerHTML = `€${this.getTotalPrice().toFixed(2)}`;
+    if (!this.modal || !document.body.classList.contains("is-modal-open")) {
+      return;
     }
+    let modalBody = document.querySelector(".modal__body");
+
+    if (!cartItem) {
+      if (this.cartItems.length == 0) {
+        this.modal.close();
+        return;
+      } else {
+        console.log(this.cartItems);
+        console.log("ререндер");
+        this.modal.close();
+        this.renderModal();
+        return;
+      }
+    }
+
+    let productId = cartItem.product.id;
+    let productCount = modalBody.querySelector(
+      `[data-product-id="${productId}"] .cart-counter__count`
+    );
+    let productPrice = modalBody.querySelector(
+      `[data-product-id="${productId}"] .cart-product__price`
+    );
+    let infoPrice = modalBody.querySelector(`.cart-buttons__info-price`);
+
+    productCount.innerHTML = cartItem.count;
+    productPrice.innerHTML = `€${(
+      cartItem.product.price * cartItem.count
+    ).toFixed(2)}`;
+    infoPrice.innerHTML = `€${this.getTotalPrice().toFixed(2)}`;
   }
   addEventListeners() {
     this.cartIcon.elem.onclick = () => this.renderModal();
