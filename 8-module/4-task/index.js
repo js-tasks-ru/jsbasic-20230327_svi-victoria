@@ -139,7 +139,7 @@ export default class Cart {
     }, createElement("<div></div>"));
     renderList.append(this.renderOrderForm());
     this.modal.setBody(renderList);
-    let btnCounter = document.querySelectorAll(".cart-counter__button");
+    let btnCounter = this.modal.elem.querySelectorAll(".cart-counter__button");
     for (let el of btnCounter) {
       el.addEventListener("click", (event) => {
         let productId = event.target.closest(".cart-product").dataset.productId;
@@ -149,7 +149,7 @@ export default class Cart {
         this.updateProductCount(productId, amount);
       });
     }
-    let cartForm = document.querySelector(".cart-form");
+    let cartForm = this.modal.elem.querySelector(".cart-form");
     cartForm.addEventListener("submit", (event) => this.onSubmit(event));
   }
 
@@ -158,7 +158,7 @@ export default class Cart {
     if (!this.modal || !document.body.classList.contains("is-modal-open")) {
       return;
     }
-    let modalBody = document.querySelector(".modal__body");
+    let modalBody = this.modal.elem.querySelector(".modal__body");
 
     if (!cartItem) {
       if (this.cartItems.length == 0) {
@@ -191,11 +191,11 @@ export default class Cart {
     this.cartIcon.elem.onclick = () => this.renderModal();
   }
 
-  onSubmit(event) {
+  onSubmit = (event) => {
     console.log("сабмит");
     event.preventDefault();
-    let cartForm = document.querySelector(".cart-form");
-    let btnSubmit = document.querySelector(".cart-buttons__button");
+    let cartForm = this.modal.elem.querySelector(".cart-form");
+    let btnSubmit = this.modal.elem.querySelector(".cart-buttons__button");
     btnSubmit.classList.add("is-loading");
 
     let formDataOrder = new FormData(cartForm);
@@ -219,5 +219,5 @@ export default class Cart {
         console.log("ok");
       }
     });
-  }
+  };
 }
