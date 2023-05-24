@@ -204,8 +204,8 @@ export default class Cart {
       body: formDataOrder,
     }).then((response) => {
       if (response.ok) {
-        let modalHeader = document.querySelector(".modal__title");
-        let modalBody = document.querySelector(".modal__body");
+        let modalHeader = this.modal.elem.querySelector(".modal__title");
+        let modalBody = this.modal.elem.querySelector(".modal__body");
         modalHeader.textContent = "Success!";
         this.cartItems.length = 0;
         modalBody.innerHTML = `<div class="modal__body-inner">
