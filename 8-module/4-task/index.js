@@ -38,21 +38,23 @@ export default class Cart {
   }
 
   updateProductCount(productId, amount) {
-    let filtratedOnId = this.cartItems.filter(
-      (item) => item.product.id == productId
-    );
-    let indexOfProduct = this.cartItems.findIndex(
-      (item) => item.product == filtratedOnId[0].product
-    );
+    let indexOfProduct = this.cartItems.findIndex((item) => {
+      if (item.product.id == productId) {
+        return true;
+      }
+    });
     this.cartItems[indexOfProduct].count += amount;
+    let cartItem = this.cartItems[indexOfProduct];
     if (this.cartItems[indexOfProduct].count == 0) {
       this.cartItems.splice(indexOfProduct, 1);
+      cartItem = null;
     }
+
     let emptyCart = this.getTotalCount();
     if (emptyCart === 0) {
       this.cartItems.length = 0;
     }
-    let cartItem = this.cartItems[indexOfProduct];
+
     this.onProductUpdate(cartItem);
   }
 
@@ -184,6 +186,7 @@ export default class Cart {
     ).toFixed(2)}`;
     infoPrice.innerHTML = `€${this.getTotalPrice().toFixed(2)}`;
   }
+
   addEventListeners() {
     this.cartIcon.elem.onclick = () => this.renderModal();
   }
