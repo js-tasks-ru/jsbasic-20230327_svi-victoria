@@ -7,7 +7,7 @@ export default class StepSlider {
 
     this.sliderThumb = document.createElement("div");
     this.sliderThumb.classList.add("slider__thumb");
-    this.sliderThumb.style = "left: 50%";
+    this.sliderThumb.style = "left: 75%";
     this.elem.append(this.sliderThumb);
     this.sliderThumb.ondragstart = () => false;
 
@@ -18,7 +18,7 @@ export default class StepSlider {
 
     this.sliderProgress = document.createElement("div");
     this.sliderProgress.classList.add("slider__progress");
-    this.sliderProgress.style = "width: 50%";
+    this.sliderProgress.style = "width: 75%";
     this.sliderThumb.after(this.sliderProgress);
 
     this.sliderSteps = document.createElement("div");
