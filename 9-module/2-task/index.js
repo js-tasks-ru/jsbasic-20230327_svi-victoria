@@ -58,7 +58,7 @@ export default class Main {
     });
     this.stepSlider.elem.addEventListener("slider-change", (event) => {
       this.productsGrid.updateFilter({
-        maxSpiciness: this.stepSlider.value,
+        maxSpiciness: event.detail,
       });
     });
     this.ribbonMenu.elem.addEventListener("ribbon-select", (event) => {
