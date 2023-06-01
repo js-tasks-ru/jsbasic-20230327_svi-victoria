@@ -18,6 +18,7 @@ export default class Cart {
       return;
     } else {
       cartItem = { product: productToAdd, count: 1 };
+
       if (this.cartItems.length == 0) {
         this.cartItems.push(cartItem);
       } else {
