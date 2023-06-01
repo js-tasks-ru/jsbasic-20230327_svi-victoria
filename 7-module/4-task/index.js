@@ -102,3 +102,4 @@ export default class StepSlider {
     this.sliderProgress.style.width = `${valuePercents}%`;
   };
 }
+
